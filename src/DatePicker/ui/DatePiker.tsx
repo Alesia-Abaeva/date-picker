@@ -1,5 +1,6 @@
 import * as React from "react";
 import { MONTHS } from "shared/const";
+import { getDateInAMonth } from "shared/utils";
 
 interface DatePickerProps {
   value: Date;
@@ -7,7 +8,7 @@ interface DatePickerProps {
 }
 
 export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
-  // переменные, отвечающие за год и месяц в панели
+  // variables responsible for the year and month in the panel
   const [panelYear, setPanelDate] = React.useState(() => value.getFullYear());
   const [panelMonth, setPanelMonth] = React.useState(() => value.getFullYear());
 
@@ -18,6 +19,17 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
 
     return [currentYear, currentMonth, currentDate];
   }, [value]);
+
+  const dateCells: DateCellItem = React.useMemo(() => {
+    const items: DateCellItem[] = [];
+
+    // we determine how many days in a month
+
+    const daysInAMonth = getDateInAMonth(panelYear, panelMonth);
+
+    return items;
+  }, [panelYear, panelMonth]);
+  //   date cell in the calendar
 
   //   const nextYear = () => {};
 
