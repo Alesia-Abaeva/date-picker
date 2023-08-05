@@ -1,6 +1,11 @@
 import * as React from "react";
 import { MONTHS } from "shared/const";
-import { getDateInAMonth } from "shared/utils";
+import {
+  getDateInAMonth,
+  getCurrentMonthDays,
+  getNextMonthDays,
+  getPreviousMonthDays,
+} from "shared/utils";
 
 interface DatePickerProps {
   value: Date;
@@ -20,14 +25,23 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     return [currentYear, currentMonth, currentDate];
   }, [value]);
 
-  const dateCells: DateCellItem = React.useMemo(() => {
-    const items: DateCellItem[] = [];
-
+  const dateCells = React.useMemo<DateCellItem[]>(() => {
     // we determine how many days in a month
 
+    // TODO:
     const daysInAMonth = getDateInAMonth(panelYear, panelMonth);
 
-    return items;
+    const currentMonthDays = getCurrentMonthDays(
+      panelYear,
+      panelMonth,
+      daysInAMonth
+    );
+    const prevMonthDays = getPreviousMonthDays(panelYear, panelMonth);
+    const nextMonthDays = getNextMonthDays(panelYear, panelMonth);
+
+    console.log(prevMonthDays);
+
+    return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
   }, [panelYear, panelMonth]);
   //   date cell in the calendar
 
@@ -44,6 +58,19 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       <div>DATE</div>
       <div>
         {day} {month} {year}
+      </div>
+      <div
+        style={{
+          width: 700,
+          height: 700,
+          display: "grid",
+          gridTemplateColumns: "repeat(7, 1fr)",
+          gridTemplateRows: "repeat(7, 1fr)",
+        }}
+      >
+        {dateCells.map((cell) => {
+          return <div key={`${cell.date}.${cell.month}`}>{cell.date}</div>;
+        })}
       </div>
     </>
   );

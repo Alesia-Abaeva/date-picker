@@ -1,5 +1,7 @@
 import { getDateInAMonth } from "shared/utils";
 
+const VISIBLE_CELLS_AMOUNT = 7 * 6;
+
 export const getPreviousMonthDays = (year: number, month: number) => {
   const currentMonthFirstDay = new Date(year, month, 1);
   const dayOfTheWeek = currentMonthFirstDay.getDate();
@@ -16,7 +18,7 @@ export const getPreviousMonthDays = (year: number, month: number) => {
   const [cellYear, cellMonth] =
     month === 0 ? [year - 1, 11] : [year, month - 1];
 
-  for (let i = 0; i < prevMonthCellsAmount; i++) {
+  for (let i = 0; i <= prevMonthCellsAmount; i++) {
     // TODO: negative month
     dateCells.push({
       year: cellYear,
@@ -24,6 +26,42 @@ export const getPreviousMonthDays = (year: number, month: number) => {
       date: daysAmountInPrevMonth - i,
     });
   }
+
+  return dateCells;
+};
+
+// 7
+export const getNextMonthDays = (year: number, month: number) => {
+  //TODO: copy paste
+  const currentMonthFirstDay = new Date(year, month, 1);
+  const dayOfTheWeek = currentMonthFirstDay.getDate();
+
+  /** How many days should I take from the previous month,
+   * if it's Mon, then you don't need to show anything in the previous month
+   */
+  const prevMonthCellsAmount = dayOfTheWeek - 1; //
+  //TODO: end copy paste
+
+  const daysAmount = getDateInAMonth(year, month);
+
+  const dateCells: DateCellItem[] = [];
+
+  const [cellYear, cellMonth] =
+    month === 11 ? [year + 1, 0] : [year, month + 1];
+
+  // получаем кол-во дней в следующем месяце, которые видны
+  const nextMonthDays =
+    VISIBLE_CELLS_AMOUNT - daysAmount - prevMonthCellsAmount;
+
+  for (let i = 1; i < nextMonthDays; i++) {
+    dateCells.push({
+      year: cellYear,
+      month: cellMonth,
+      date: i,
+    });
+  }
+
+  return dateCells;
 };
 
 /** to get all days */
@@ -34,7 +72,9 @@ export const getCurrentMonthDays = (
 ): DateCellItem[] => {
   const dateCells: DateCellItem[] = [];
 
-  for (let i = 1; i < numberOfDays; i++) {
+  console.log(numberOfDays, "DAYS");
+
+  for (let i = 1; i <= numberOfDays; i++) {
     dateCells.push({
       year,
       month,
