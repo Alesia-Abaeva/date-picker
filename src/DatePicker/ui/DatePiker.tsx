@@ -6,7 +6,7 @@ import {
   getNextMonthDays,
   getPreviousMonthDays,
 } from "shared/utils";
-
+import "./DatePiker.css";
 interface DatePickerProps {
   value: Date;
   onChange: (value: Date) => void;
@@ -59,17 +59,16 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       <div>
         {day} {month} {year}
       </div>
-      <div
-        style={{
-          width: 700,
-          height: 700,
-          display: "grid",
-          gridTemplateColumns: "repeat(7, 1fr)",
-          gridTemplateRows: "repeat(7, 1fr)",
-        }}
-      >
+      <div className="CalendarPanel">
         {dateCells.map((cell) => {
-          return <div key={`${cell.date}.${cell.month}`}>{cell.date}</div>;
+          return (
+            <div
+              key={`${cell.date}.${cell.month}`}
+              className="CalendarPanelItem"
+            >
+              {cell.date}
+            </div>
+          );
         })}
       </div>
     </>

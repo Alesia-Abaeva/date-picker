@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
+.CalendarPanel {
+  width: 700px;
+  height: 700px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+}
+
+.CalendarPanelItem {
+  border: 1px solid lightgray;
+}

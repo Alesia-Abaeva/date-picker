@@ -1,6 +1,6 @@
 import * as React from "react";
-import "./App.css";
 import { DatePiker } from "./DatePicker";
+import "./App.css";
 
 function App() {
   const [date, setDate] = React.useState(() => new Date());
