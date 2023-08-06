@@ -12,4 +12,13 @@
 
 .CalendarPanelItem {
   border: 1px solid lightgray;
+  padding: 7px;
+  display: flex;
+  justify-content: right;
+}
+
+.Controller {
+  display: flex;
+  margin: 12px 0px;
+  gap: 8px;
 }

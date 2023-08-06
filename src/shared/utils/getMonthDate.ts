@@ -4,12 +4,13 @@ const VISIBLE_CELLS_AMOUNT = 7 * 6;
 
 export const getPreviousMonthDays = (year: number, month: number) => {
   const currentMonthFirstDay = new Date(year, month, 1);
-  const dayOfTheWeek = currentMonthFirstDay.getDate();
+  const dayOfTheWeek = currentMonthFirstDay.getDay();
 
   /** How many days should I take from the previous month,
    * if it's Mon, then you don't need to show anything in the previous month
    */
-  const prevMonthCellsAmount = dayOfTheWeek - 1; //
+  const prevMonthCellsAmount = dayOfTheWeek === 0 ? 6 : dayOfTheWeek - 1; //
+  //
 
   const daysAmountInPrevMonth = getMonthDays.number(year, month - 1); // number of days in the previous month
 
@@ -18,8 +19,7 @@ export const getPreviousMonthDays = (year: number, month: number) => {
   const [cellYear, cellMonth] =
     month === 0 ? [year - 1, 11] : [year, month - 1];
 
-  for (let i = 0; i <= prevMonthCellsAmount; i++) {
-    // TODO: negative month
+  for (let i = prevMonthCellsAmount - 1; i >= 0; i--) {
     dateCells.push({
       year: cellYear,
       month: cellMonth,
@@ -27,6 +27,7 @@ export const getPreviousMonthDays = (year: number, month: number) => {
     });
   }
 
+  console.log(year, month, dateCells, "PREV");
   return dateCells;
 };
 
@@ -34,12 +35,12 @@ export const getPreviousMonthDays = (year: number, month: number) => {
 export const getNextMonthDays = (year: number, month: number) => {
   //TODO: copy paste
   const currentMonthFirstDay = new Date(year, month, 1);
-  const dayOfTheWeek = currentMonthFirstDay.getDate();
+  const dayOfTheWeek = currentMonthFirstDay.getDay();
 
   /** How many days should I take from the previous month,
    * if it's Mon, then you don't need to show anything in the previous month
    */
-  const prevMonthCellsAmount = dayOfTheWeek - 1; //
+  const prevMonthCellsAmount = dayOfTheWeek === 0 ? 6 : dayOfTheWeek - 1; //
   //TODO: end copy paste
 
   const daysAmount = getMonthDays.number(year, month);
@@ -53,7 +54,9 @@ export const getNextMonthDays = (year: number, month: number) => {
   const nextMonthDays =
     VISIBLE_CELLS_AMOUNT - daysAmount - prevMonthCellsAmount;
 
-  for (let i = 1; i < nextMonthDays; i++) {
+  console.log("nextMonthDays", nextMonthDays, daysAmount, prevMonthCellsAmount);
+
+  for (let i = 1; i <= nextMonthDays; i++) {
     dateCells.push({
       year: cellYear,
       month: cellMonth,

@@ -9,8 +9,8 @@ interface DatePickerProps {
 
 export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   // variables responsible for the year and month in the panel
-  const [panelYear, setPanelDate] = React.useState(() => value.getFullYear());
-  const [panelMonth, setPanelMonth] = React.useState(() => value.getFullYear());
+  const [panelYear, setPanelYear] = React.useState(() => value.getFullYear());
+  const [panelMonth, setPanelMonth] = React.useState(() => value.getMonth());
 
   const [year, month, day] = React.useMemo(() => {
     const currentYear = value.getFullYear();
@@ -34,19 +34,38 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     const prevMonthDays = getMonthDays.prev(panelYear, panelMonth);
     const nextMonthDays = getMonthDays.next(panelYear, panelMonth);
 
-    console.log(prevMonthDays);
+    console.log(prevMonthDays, "prevMonthDays");
+    console.log(currentMonthDays);
 
     return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
   }, [panelYear, panelMonth]);
   //   date cell in the calendar
 
-  //   const nextYear = () => {};
+  const nextYear = () => {
+    setPanelYear(panelYear + 1);
+  };
 
-  //   const prevYear = () => {};
+  const prevYear = () => {
+    setPanelYear(panelYear - 1);
+  };
 
-  //   const nextMonth = () => {};
+  const nextMonth = () => {
+    if (panelMonth === 11) {
+      setPanelMonth(0);
+      setPanelYear(panelYear + 1);
+      return;
+    }
+    setPanelMonth(panelMonth + 1);
+  };
 
-  //   const prevMonth = () => {};
+  const prevMonth = () => {
+    if (panelMonth === 0) {
+      setPanelMonth(11);
+      setPanelYear(panelYear - 1);
+      return;
+    }
+    setPanelMonth(panelMonth - 1);
+  };
 
   return (
     <>
@@ -54,6 +73,21 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       <div>
         {day} {month} {year}
       </div>
+      <div>
+        {day} {panelMonth} {panelYear}
+      </div>
+
+      {/* TODO: add component */}
+
+      <div className="Controller">
+        <button onClick={prevYear}>prev year</button>
+        <button onClick={nextYear}>next year</button>
+        <button onClick={prevMonth}>prev month</button>
+        <button onClick={nextMonth}>next month</button>
+      </div>
+
+      {/* TODO: end add component */}
+
       <div className="CalendarPanel">
         {CONST.WEEK.map((weekDay) => (
           <div className="CalendarPanelItem" key={weekDay}>
