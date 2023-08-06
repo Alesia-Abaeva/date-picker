@@ -1,11 +1,6 @@
 import * as React from "react";
-import { MONTHS } from "shared/const";
-import {
-  getDateInAMonth,
-  getCurrentMonthDays,
-  getNextMonthDays,
-  getPreviousMonthDays,
-} from "shared/utils";
+import { CONST } from "shared/const";
+import { getMonthDays } from "shared/utils";
 import "./DatePiker.css";
 interface DatePickerProps {
   value: Date;
@@ -20,7 +15,7 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   const [year, month, day] = React.useMemo(() => {
     const currentYear = value.getFullYear();
     const currentDate = value.getDate();
-    const currentMonth = MONTHS[value.getMonth()];
+    const currentMonth = CONST.MONTHS[value.getMonth()];
 
     return [currentYear, currentMonth, currentDate];
   }, [value]);
@@ -29,15 +24,15 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     // we determine how many days in a month
 
     // TODO:
-    const daysInAMonth = getDateInAMonth(panelYear, panelMonth);
+    const daysInAMonth = getMonthDays.number(panelYear, panelMonth);
 
-    const currentMonthDays = getCurrentMonthDays(
+    const currentMonthDays = getMonthDays.current(
       panelYear,
       panelMonth,
       daysInAMonth
     );
-    const prevMonthDays = getPreviousMonthDays(panelYear, panelMonth);
-    const nextMonthDays = getNextMonthDays(panelYear, panelMonth);
+    const prevMonthDays = getMonthDays.prev(panelYear, panelMonth);
+    const nextMonthDays = getMonthDays.next(panelYear, panelMonth);
 
     console.log(prevMonthDays);
 
@@ -60,6 +55,11 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         {day} {month} {year}
       </div>
       <div className="CalendarPanel">
+        {CONST.WEEK.map((weekDay) => (
+          <div className="CalendarPanelItem" key={weekDay}>
+            {weekDay}
+          </div>
+        ))}
         {dateCells.map((cell) => {
           return (
             <div

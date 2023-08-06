@@ -1,4 +1,4 @@
-import { getDateInAMonth } from "shared/utils";
+import { getMonthDays } from "shared/utils";
 
 const VISIBLE_CELLS_AMOUNT = 7 * 6;
 
@@ -11,7 +11,7 @@ export const getPreviousMonthDays = (year: number, month: number) => {
    */
   const prevMonthCellsAmount = dayOfTheWeek - 1; //
 
-  const daysAmountInPrevMonth = getDateInAMonth(year, month - 1); // number of days in the previous month
+  const daysAmountInPrevMonth = getMonthDays.number(year, month - 1); // number of days in the previous month
 
   const dateCells: DateCellItem[] = [];
 
@@ -42,7 +42,7 @@ export const getNextMonthDays = (year: number, month: number) => {
   const prevMonthCellsAmount = dayOfTheWeek - 1; //
   //TODO: end copy paste
 
-  const daysAmount = getDateInAMonth(year, month);
+  const daysAmount = getMonthDays.number(year, month);
 
   const dateCells: DateCellItem[] = [];
 
@@ -71,8 +71,6 @@ export const getCurrentMonthDays = (
   numberOfDays: number
 ): DateCellItem[] => {
   const dateCells: DateCellItem[] = [];
-
-  console.log(numberOfDays, "DAYS");
 
   for (let i = 1; i <= numberOfDays; i++) {
     dateCells.push({

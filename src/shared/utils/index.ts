@@ -1,2 +1,13 @@
-export * from "./getDateInAMonth";
-export * from "./getMonthDate";
+import { getDateInAMonth as number } from "./getDateInAMonth";
+import {
+  getNextMonthDays as next,
+  getPreviousMonthDays as prev,
+  getCurrentMonthDays as current,
+} from "./getMonthDate";
+
+export const getMonthDays = {
+  number,
+  next,
+  prev,
+  current,
+};
