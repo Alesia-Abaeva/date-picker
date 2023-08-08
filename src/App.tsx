@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <Features.DatePicker value={date} onChange={setDate} />;
+      <Features.DatePicker value={date} onChange={setDate} />
     </>
   );
 }
