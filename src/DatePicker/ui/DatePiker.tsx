@@ -22,9 +22,6 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   }, [value]);
 
   const dateCells = React.useMemo<DateCellItem[]>(() => {
-    // we determine how many days in a month
-
-    // TODO:
     const daysInAMonth = getMonthDays.number(panelYear, panelMonth);
 
     const currentMonthDays = getMonthDays.current(
@@ -65,6 +62,10 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     setPanelMonth(panelMonth - 1);
   };
 
+  const onDateSelect = (item: DateCellItem) => {
+    onChange(new Date(item.year, item.month, item.date));
+  };
+
   return (
     <>
       <div>DATE</div>
@@ -96,7 +97,11 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
           const isCurrentDate = date === day && m === nMonth && y === year;
 
           return (
-            <div key={`${date}.${m}`} className="CalendarPanelItem">
+            <div
+              key={`${date}.${m}`}
+              className="CalendarPanelItem"
+              onClick={() => onDateSelect({ date, month: m, year: y })}
+            >
               <span {...(isCurrentDate ? { className: "CurrentDate" } : {})}>
                 {date}
               </span>

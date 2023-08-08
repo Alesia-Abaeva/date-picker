@@ -5,7 +5,11 @@ import "./App.css";
 function App() {
   const [date, setDate] = React.useState(() => new Date());
 
-  return <DatePiker value={date} onChange={setDate} />;
+  return (
+    <>
+      <DatePiker value={date} onChange={setDate} />;
+    </>
+  );
 }
 
 export default App;
