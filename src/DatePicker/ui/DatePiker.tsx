@@ -12,12 +12,13 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   const [panelYear, setPanelYear] = React.useState(() => value.getFullYear());
   const [panelMonth, setPanelMonth] = React.useState(() => value.getMonth());
 
-  const [year, month, day] = React.useMemo(() => {
+  const [year, month, day, nMonth] = React.useMemo(() => {
     const currentYear = value.getFullYear();
     const currentDate = value.getDate();
     const currentMonth = CONST.MONTHS[value.getMonth()];
+    const numberMonth = value.getMonth();
 
-    return [currentYear, currentMonth, currentDate];
+    return [currentYear, currentMonth, currentDate, numberMonth];
   }, [value]);
 
   const dateCells = React.useMemo<DateCellItem[]>(() => {
@@ -33,9 +34,6 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     );
     const prevMonthDays = getMonthDays.prev(panelYear, panelMonth);
     const nextMonthDays = getMonthDays.next(panelYear, panelMonth);
-
-    console.log(prevMonthDays, "prevMonthDays");
-    console.log(currentMonthDays);
 
     return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
   }, [panelYear, panelMonth]);
@@ -94,13 +92,14 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
             {weekDay}
           </div>
         ))}
-        {dateCells.map((cell) => {
+        {dateCells.map(({ date, month: m, year: y }) => {
+          const isCurrentDate = date === day && m === nMonth && y === year;
+
           return (
-            <div
-              key={`${cell.date}.${cell.month}`}
-              className="CalendarPanelItem"
-            >
-              {cell.date}
+            <div key={`${date}.${m}`} className="CalendarPanelItem">
+              <span {...(isCurrentDate ? { className: "CurrentDate" } : {})}>
+                {date}
+              </span>
             </div>
           );
         })}

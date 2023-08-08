@@ -15,6 +15,17 @@
   padding: 7px;
   display: flex;
   justify-content: right;
+  position: relative;
+}
+
+.CalendarPanelItem > span {
+  width: 25px;
+  height: 25px;
+}
+
+.CurrentDate {
+  background-color: brown;
+  border-radius: 50%;
 }
 
 .Controller {
