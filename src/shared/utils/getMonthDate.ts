@@ -2,15 +2,19 @@ import { getMonthDays } from "shared/utils";
 
 const VISIBLE_CELLS_AMOUNT = 7 * 6;
 
-export const getPreviousMonthDays = (year: number, month: number) => {
+/** How many days should I take from the previous month,
+ * if it's Mon, then you don't need to show anything in the previous month
+ */
+const getNumberPrevMonth = (year: number, month: number) => {
   const currentMonthFirstDay = new Date(year, month, 1);
   const dayOfTheWeek = currentMonthFirstDay.getDay();
+  const prevMonthCellsAmount = dayOfTheWeek === 0 ? 6 : dayOfTheWeek - 1;
 
-  /** How many days should I take from the previous month,
-   * if it's Mon, then you don't need to show anything in the previous month
-   */
-  const prevMonthCellsAmount = dayOfTheWeek === 0 ? 6 : dayOfTheWeek - 1; //
-  //
+  return prevMonthCellsAmount;
+};
+
+export const getPreviousMonthDays = (year: number, month: number) => {
+  const prevMonthCellsAmount = getNumberPrevMonth(year, month);
 
   const daysAmountInPrevMonth = getMonthDays.number(year, month - 1); // number of days in the previous month
 
@@ -31,17 +35,8 @@ export const getPreviousMonthDays = (year: number, month: number) => {
   return dateCells;
 };
 
-// 7
 export const getNextMonthDays = (year: number, month: number) => {
-  //TODO: copy paste
-  const currentMonthFirstDay = new Date(year, month, 1);
-  const dayOfTheWeek = currentMonthFirstDay.getDay();
-
-  /** How many days should I take from the previous month,
-   * if it's Mon, then you don't need to show anything in the previous month
-   */
-  const prevMonthCellsAmount = dayOfTheWeek === 0 ? 6 : dayOfTheWeek - 1; //
-  //TODO: end copy paste
+  const prevMonthCellsAmount = getNumberPrevMonth(year, month);
 
   const daysAmount = getMonthDays.number(year, month);
 
@@ -50,7 +45,7 @@ export const getNextMonthDays = (year: number, month: number) => {
   const [cellYear, cellMonth] =
     month === 11 ? [year + 1, 0] : [year, month + 1];
 
-  // получаем кол-во дней в следующем месяце, которые видны
+  // get the number of days in the next month that are visible
   const nextMonthDays =
     VISIBLE_CELLS_AMOUNT - daysAmount - prevMonthCellsAmount;
 
