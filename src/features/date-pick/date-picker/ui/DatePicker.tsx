@@ -1,13 +1,13 @@
 import * as React from "react";
 import { CONST } from "shared/const";
 import { getMonthDays } from "shared/utils";
-import "./DatePiker.css";
+import "./DatePicker.css";
 interface DatePickerProps {
   value: Date;
   onChange: (value: Date) => void;
 }
 
-export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   // variables responsible for the year and month in the panel
   const [panelYear, setPanelYear] = React.useState(() => value.getFullYear());
   const [panelMonth, setPanelMonth] = React.useState(() => value.getMonth());
@@ -112,3 +112,5 @@ export const DatePiker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     </>
   );
 };
+
+export default DatePicker;

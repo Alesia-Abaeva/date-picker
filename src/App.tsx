@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DatePiker } from "./DatePicker";
+import { Features } from "features/date-pick";
 import "./App.css";
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <DatePiker value={date} onChange={setDate} />;
+      <Features.DatePicker value={date} onChange={setDate} />;
     </>
   );
 }
