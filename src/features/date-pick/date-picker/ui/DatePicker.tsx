@@ -1,11 +1,20 @@
 import * as React from "react";
+import { isValidDateString, addZero, parseToDate } from "shared/utils";
 import { CalendarPopup } from "./components";
 import "./DatePicker.css";
 
 const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   const [showPopup, setShowPopup] = React.useState(false);
-
+  const [inputValue, setInputValue] = React.useState("");
   const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useLayoutEffect(() => {
+    const date = addZero(value.getDate());
+    const month = addZero(value.getMonth());
+    const year = value.getFullYear();
+
+    setInputValue(`${date}-${month}-${year}`);
+  }, [value]);
 
   React.useEffect(() => {
     const element = ref.current;
@@ -44,10 +53,33 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     setShowPopup(true);
   };
 
+  const onBlur = () => {
+    if (!isValidDateString(inputValue)) {
+      return;
+    }
+
+    const { date, month, year } = parseToDate(inputValue);
+
+    const dateObject = new Date(year, month, date);
+
+    onChange(dateObject);
+  };
+
+  const onInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+    setInputValue(value);
+  };
+
   return (
     <>
       <div className="CalendarContainer" ref={ref}>
-        <input type="text" onFocus={onFocus} />
+        <input
+          type="text"
+          onFocus={onFocus}
+          value={inputValue}
+          onChange={onInputValueChange}
+          onBlur={onBlur}
+        />
         {showPopup && (
           <div className="CalendarWrapper">
             <CalendarPopup value={value} onChange={onChange} />
