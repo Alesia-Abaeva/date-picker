@@ -2,34 +2,11 @@
   box-sizing: border-box;
 }
 
-.CalendarPanel {
-  width: 700px;
-  height: 700px;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(7, 1fr);
-}
-
-.CalendarPanelItem {
-  border: 1px solid lightgray;
-  padding: 7px;
-  display: flex;
-  justify-content: right;
+.CalendarContainer {
   position: relative;
 }
 
-.CalendarPanelItem > span {
-  width: 25px;
-  height: 25px;
-}
-
-.CurrentDate {
-  background-color: brown;
-  border-radius: 50%;
-}
-
-.Controller {
-  display: flex;
-  margin: 12px 0px;
-  gap: 8px;
+.CalendarWrapper {
+  /* position: absolute; */
+  top: 100%;
 }
