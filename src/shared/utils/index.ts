@@ -14,3 +14,4 @@ export const getMonthDays = {
 
 export * from "./addZero";
 export * from "./isValidDateString";
+export * from "./getInputValueFromDate";

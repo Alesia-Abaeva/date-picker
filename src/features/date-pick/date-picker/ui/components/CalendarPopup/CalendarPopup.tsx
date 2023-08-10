@@ -73,7 +73,7 @@ const CalendarPopup: React.FC<DatePickerProps> = ({ value, onChange }) => {
         {day} {month} {year}
       </div>
       <div>
-        {day} {panelMonth} {panelYear}
+        {day} {panelMonth + 1} {panelYear}
       </div>
 
       {/* TODO: add component */}

@@ -1,5 +1,9 @@
 import * as React from "react";
-import { isValidDateString, addZero, parseToDate } from "shared/utils";
+import {
+  isValidDateString,
+  parseToDate,
+  getInputValueFromDate,
+} from "shared/utils";
 import { CalendarPopup } from "./components";
 import "./DatePicker.css";
 
@@ -9,11 +13,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useLayoutEffect(() => {
-    const date = addZero(value.getDate());
-    const month = addZero(value.getMonth());
-    const year = value.getFullYear();
-
-    setInputValue(`${date}-${month}-${year}`);
+    setInputValue(getInputValueFromDate(value));
   }, [value]);
 
   React.useEffect(() => {
@@ -49,25 +49,34 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     };
   }, []);
 
-  const onFocus = () => {
-    setShowPopup(true);
-  };
-
-  const onBlur = () => {
+  const handleUpdateValueFromInput = () => {
     if (!isValidDateString(inputValue)) {
       return;
     }
 
     const { date, month, year } = parseToDate(inputValue);
-
-    const dateObject = new Date(year, month, date);
-
+    // TODO: always update date on blur ???
+    const dateObject = new Date(year, month - 1, date);
     onChange(dateObject);
   };
 
+  const onFocus = () => {
+    setShowPopup(true);
+  };
+
+  const onBlur = () => {
+    handleUpdateValueFromInput();
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== "Enter") {
+      return;
+    }
+    handleUpdateValueFromInput();
+  };
+
   const onInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-    setInputValue(value);
+    setInputValue(e.target.value.trim());
   };
 
   return (
@@ -79,6 +88,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
           value={inputValue}
           onChange={onInputValueChange}
           onBlur={onBlur}
+          onKeyDown={onKeyDown}
         />
         {showPopup && (
           <div className="CalendarWrapper">
