@@ -2,24 +2,45 @@ import * as React from "react";
 import { CONST } from "shared/const";
 import { getMonthDays } from "shared/utils";
 import "./CalendarPopup.css";
-interface DatePickerProps {
-  value: Date;
+interface CalendarPopupProps {
+  selectedValue: Date; // значение которое выбранно пользователем
+  inputValue?: Date;
   onChange: (value: Date) => void;
+  min?: Date;
+  max?: Date;
 }
 
-const CalendarPopup: React.FC<DatePickerProps> = ({ value, onChange }) => {
+const CalendarPopup: React.FC<CalendarPopupProps> = ({
+  selectedValue,
+  inputValue,
+  onChange,
+}) => {
   // variables responsible for the year and month in the panel
-  const [panelYear, setPanelYear] = React.useState(() => value.getFullYear());
-  const [panelMonth, setPanelMonth] = React.useState(() => value.getMonth());
+  const [panelYear, setPanelYear] = React.useState(() =>
+    selectedValue.getFullYear()
+  );
+  const [panelMonth, setPanelMonth] = React.useState(() =>
+    selectedValue.getMonth()
+  );
+
+  // Почему useLayoutEffect? Не будет моргания в интерфейсе, то есть сначала компонент отрендерился по статике, потом по измененным.
+  // useLayoutEffect вызывается синхронно, после того как вызывался DOM, то есть у нас обновится опять стейт, и компонент заново перерендерится
+  React.useLayoutEffect(() => {
+    if (!inputValue) {
+      return;
+    }
+
+    setPanelMonth(inputValue.getMonth());
+  }, [inputValue]);
 
   const [year, month, day, nMonth] = React.useMemo(() => {
-    const currentYear = value.getFullYear();
-    const currentDate = value.getDate();
-    const currentMonth = CONST.MONTHS[value.getMonth()];
-    const numberMonth = value.getMonth();
+    const currentYear = selectedValue.getFullYear();
+    const currentDate = selectedValue.getDate();
+    const currentMonth = CONST.MONTHS[selectedValue.getMonth()];
+    const numberMonth = selectedValue.getMonth();
 
     return [currentYear, currentMonth, currentDate, numberMonth];
-  }, [value]);
+  }, [selectedValue]);
 
   const dateCells = React.useMemo<DateCellItem[]>(() => {
     const daysInAMonth = getMonthDays.number(panelYear, panelMonth);

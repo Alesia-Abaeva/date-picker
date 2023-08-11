@@ -1,5 +1,7 @@
 # DATE PICKER
 
+To select or input a date.
+
 ## Tech stack
 
 - Typescript

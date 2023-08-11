@@ -79,8 +79,22 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     setInputValue(e.target.value.trim());
   };
 
+  // use memo for update input value
+  const inputValueDate = React.useMemo(() => {
+    if (!isValidDateString(inputValue)) {
+      return;
+    }
+
+    const { date, month, year } = parseToDate(inputValue);
+    const dateObject = new Date(year, month - 1, date);
+
+    return dateObject;
+  }, [inputValue]);
+
   return (
     <>
+      <h1>DatePicker </h1>
+      <h4>To select or input a date.</h4>
       <div className="CalendarContainer" ref={ref}>
         <input
           type="text"
@@ -92,7 +106,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         />
         {showPopup && (
           <div className="CalendarWrapper">
-            <CalendarPopup value={value} onChange={onChange} />
+            <CalendarPopup
+              selectedValue={value}
+              onChange={onChange}
+              inputValue={inputValueDate}
+            />
           </div>
         )}
       </div>
