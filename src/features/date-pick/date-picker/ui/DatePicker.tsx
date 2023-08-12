@@ -1,9 +1,5 @@
 import * as React from "react";
-import {
-  isValidDateString,
-  parseToDate,
-  getInputValueFromDate,
-} from "shared/utils";
+import { getInputValueFromDate, updateValueFromInput } from "shared/utils";
 import { CalendarPopup } from "./components";
 import "./DatePicker.css";
 
@@ -15,7 +11,9 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   React.useLayoutEffect(() => {
     setInputValue(getInputValueFromDate(value));
   }, [value]);
+  // так как мы не можем гарантировать, что вне компонента value не будет меняться
 
+  // эффект, который открывает и закрывает поп-ап
   React.useEffect(() => {
     const element = ref.current;
 
@@ -49,14 +47,16 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     };
   }, []);
 
+  const onInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value.trim());
+  };
+
   const handleUpdateValueFromInput = () => {
-    if (!isValidDateString(inputValue)) {
+    const dateObject = updateValueFromInput(inputValue);
+
+    if (!dateObject) {
       return;
     }
-
-    const { date, month, year } = parseToDate(inputValue);
-    // TODO: always update date on blur ???
-    const dateObject = new Date(year, month - 1, date);
     onChange(dateObject);
   };
 
@@ -75,18 +75,13 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     handleUpdateValueFromInput();
   };
 
-  const onInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value.trim());
-  };
-
   // use memo for update input value
   const inputValueDate = React.useMemo(() => {
-    if (!isValidDateString(inputValue)) {
+    const dateObject = updateValueFromInput(inputValue);
+
+    if (!dateObject) {
       return;
     }
-
-    const { date, month, year } = parseToDate(inputValue);
-    const dateObject = new Date(year, month - 1, date);
 
     return dateObject;
   }, [inputValue]);
