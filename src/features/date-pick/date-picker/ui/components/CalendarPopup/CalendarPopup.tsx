@@ -1,6 +1,7 @@
 import * as React from "react";
+import { clsx } from "clsx";
 import { CONST } from "shared/const";
-import { getMonthDays } from "shared/utils";
+import { getMonthDays, isToday } from "shared/utils";
 import "./CalendarPopup.css";
 interface CalendarPopupProps {
   selectedValue: Date; // значение которое выбранно пользователем
@@ -22,6 +23,8 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
   const [panelMonth, setPanelMonth] = React.useState(() =>
     selectedValue.getMonth()
   );
+
+  const todayDate = React.useMemo(() => new Date(), []);
 
   // Почему useLayoutEffect? Не будет моргания в интерфейсе, то есть сначала компонент отрендерился по статике, потом по измененным.
   // useLayoutEffect вызывается синхронно, после того как вызывался DOM, то есть у нас обновится опять стейт, и компонент заново перерендерится
@@ -114,16 +117,29 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
             {weekDay}
           </div>
         ))}
-        {dateCells.map(({ date, month: m, year: y }) => {
-          const isCurrentDate = date === day && m === nMonth && y === year;
+        {dateCells.map(({ date, month: m, year: y, type }) => {
+          const isSelectedDate = date === day && m === nMonth && y === year; //текущая дата
+          const isTodayDate = isToday(todayDate, {
+            date,
+            month: m,
+            year: y,
+            type,
+          });
+          const isNotCurrent = type !== "current";
 
           return (
             <div
               key={`${date}.${m}`}
               className="CalendarPanelItem"
-              onClick={() => onDateSelect({ date, month: m, year: y })}
+              onClick={() => onDateSelect({ date, month: m, year: y, type })}
             >
-              <span {...(isCurrentDate ? { className: "CurrentDate" } : {})}>
+              <span
+                className={clsx(
+                  isSelectedDate && "CurrentDate-selected",
+                  isTodayDate && "CurrentDate-today",
+                  isNotCurrent && "CurrentDate-not-current-month"
+                )}
+              >
                 {date}
               </span>
             </div>

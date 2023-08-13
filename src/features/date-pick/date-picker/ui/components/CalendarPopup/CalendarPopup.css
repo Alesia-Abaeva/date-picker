@@ -16,16 +16,26 @@
   display: flex;
   justify-content: right;
   position: relative;
+  cursor: pointer;
 }
 
 .CalendarPanelItem > span {
-  width: 25px;
-  height: 25px;
+  width: 26px;
+  height: 26px;
 }
 
-.CurrentDate {
+.CurrentDate-selected {
   background-color: brown;
   border-radius: 50%;
+}
+
+.CurrentDate-today {
+  border-radius: 50%;
+  border: 1px solid brown;
+}
+
+.CurrentDate-not-current-month {
+  opacity: 0.4;
 }
 
 .Controller {

@@ -16,3 +16,4 @@ export * from "./addZero";
 export * from "./isValidDateString";
 export * from "./getInputValueFromDate";
 export * from "./updateValueFromInput";
+export * from "./isToday";

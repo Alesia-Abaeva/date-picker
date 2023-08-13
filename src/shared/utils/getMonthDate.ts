@@ -28,6 +28,7 @@ export const getPreviousMonthDays = (year: number, month: number) => {
       year: cellYear,
       month: cellMonth,
       date: daysAmountInPrevMonth - i,
+      type: "prev",
     });
   }
 
@@ -53,6 +54,7 @@ export const getNextMonthDays = (year: number, month: number) => {
       year: cellYear,
       month: cellMonth,
       date: i,
+      type: "next",
     });
   }
 
@@ -72,6 +74,7 @@ export const getCurrentMonthDays = (
       year,
       month,
       date: i,
+      type: "current",
     });
   }
 
