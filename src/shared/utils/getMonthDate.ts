@@ -31,7 +31,6 @@ export const getPreviousMonthDays = (year: number, month: number) => {
     });
   }
 
-  console.log(year, month, dateCells, "PREV");
   return dateCells;
 };
 
@@ -48,8 +47,6 @@ export const getNextMonthDays = (year: number, month: number) => {
   // get the number of days in the next month that are visible
   const nextMonthDays =
     VISIBLE_CELLS_AMOUNT - daysAmount - prevMonthCellsAmount;
-
-  console.log("nextMonthDays", nextMonthDays, daysAmount, prevMonthCellsAmount);
 
   for (let i = 1; i <= nextMonthDays; i++) {
     dateCells.push({

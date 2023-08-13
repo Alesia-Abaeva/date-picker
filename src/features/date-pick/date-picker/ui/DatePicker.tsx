@@ -9,6 +9,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   const [inputValue, setInputValue] = React.useState("");
   const ref = React.useRef<HTMLDivElement>(null);
   const latestInputValue = useLatest(inputValue);
+  const latestValue = useLatest(value);
 
   React.useLayoutEffect(() => {
     setInputValue(getInputValueFromDate(value));
@@ -44,6 +45,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       if (dateFromInputValue) {
         onChange(dateFromInputValue);
       }
+      setInputValue(getInputValueFromDate(latestValue.current));
       setShowPopup(false);
     };
 
@@ -53,15 +55,6 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       document.removeEventListener("click", onDocumentClick);
     };
   }, [latestInputValue]);
-
-  const handleUpdateValueFromInput = () => {
-    const dateObject = updateValueFromInput(inputValue);
-
-    if (!dateObject) {
-      return;
-    }
-    onChange(dateObject);
-  };
 
   const handleChange = (value: Date) => {
     onChange(value);
@@ -76,15 +69,18 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     setShowPopup(true);
   };
 
-  const onBlur = () => {
-    handleUpdateValueFromInput();
-  };
-
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key !== "Enter") {
       return;
     }
-    handleUpdateValueFromInput();
+
+    const dateObject = updateValueFromInput(inputValue);
+
+    if (!dateObject) {
+      setInputValue(getInputValueFromDate(value));
+    } else {
+      handleChange(value);
+    }
   };
 
   // use memo for update input value
@@ -108,7 +104,6 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
           onClick={onFocus}
           value={inputValue}
           onChange={onInputValueChange}
-          onBlur={onBlur}
           onKeyDown={onKeyDown}
         />
         {showPopup && (
