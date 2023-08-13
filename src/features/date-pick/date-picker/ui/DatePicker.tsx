@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useLatest } from "shared/hook";
 import { getInputValueFromDate, updateValueFromInput } from "shared/utils";
 import { CalendarPopup } from "./components";
 import "./DatePicker.css";
@@ -7,6 +8,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
   const [showPopup, setShowPopup] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
   const ref = React.useRef<HTMLDivElement>(null);
+  const latestInputValue = useLatest(inputValue);
 
   React.useLayoutEffect(() => {
     setInputValue(getInputValueFromDate(value));
@@ -37,6 +39,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         return;
       }
 
+      const dateFromInputValue = updateValueFromInput(latestInputValue.current);
+
+      if (dateFromInputValue) {
+        onChange(dateFromInputValue);
+      }
       setShowPopup(false);
     };
 
@@ -45,11 +52,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     return () => {
       document.removeEventListener("click", onDocumentClick);
     };
-  }, []);
-
-  const onInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value.trim());
-  };
+  }, [latestInputValue]);
 
   const handleUpdateValueFromInput = () => {
     const dateObject = updateValueFromInput(inputValue);
@@ -58,6 +61,15 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       return;
     }
     onChange(dateObject);
+  };
+
+  const handleChange = (value: Date) => {
+    onChange(value);
+    setShowPopup(false);
+  };
+
+  const onInputValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value.trim());
   };
 
   const onFocus = () => {
@@ -93,7 +105,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
       <div className="CalendarContainer" ref={ref}>
         <input
           type="text"
-          onFocus={onFocus}
+          onClick={onFocus}
           value={inputValue}
           onChange={onInputValueChange}
           onBlur={onBlur}
@@ -103,7 +115,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
           <div className="CalendarWrapper">
             <CalendarPopup
               selectedValue={value}
-              onChange={onChange}
+              onChange={handleChange}
               inputValue={inputValueDate}
             />
           </div>
