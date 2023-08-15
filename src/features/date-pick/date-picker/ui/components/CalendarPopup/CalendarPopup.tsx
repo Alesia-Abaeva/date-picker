@@ -1,7 +1,7 @@
 import * as React from "react";
 import { clsx } from "clsx";
 import { CONST } from "shared/const";
-import { getMonthDays, isToday } from "shared/utils";
+import { getMonthDays, isInRange, isToday } from "shared/utils";
 import "./CalendarPopup.css";
 interface CalendarPopupProps {
   selectedValue: Date; // значение которое выбранно пользователем
@@ -15,6 +15,8 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
   selectedValue,
   inputValue,
   onChange,
+  min,
+  max,
 }) => {
   // variables responsible for the year and month in the panel
   const [panelYear, setPanelYear] = React.useState(() =>
@@ -25,6 +27,8 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
   );
 
   const todayDate = React.useMemo(() => new Date(), []);
+
+  console.log(selectedValue, "SELE");
 
   // Почему useLayoutEffect? Не будет моргания в интерфейсе, то есть сначала компонент отрендерился по статике, потом по измененным.
   // useLayoutEffect вызывается синхронно, после того как вызывался DOM, то есть у нас обновится опять стейт, и компонент заново перерендерится
@@ -94,13 +98,11 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
     <>
       <div>DATE</div>
       <div>
-        {day} {month} {year}
+        SELECTED: {day} {month} {year}
       </div>
       <div>
-        {day} {panelMonth + 1} {panelYear}
+        PANEL: {day} {panelMonth + 1} {panelYear}
       </div>
-
-      {/* TODO: add component */}
 
       <div className="Controller">
         <button onClick={prevYear}>prev year</button>
@@ -109,38 +111,43 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
         <button onClick={nextMonth}>next month</button>
       </div>
 
-      {/* TODO: end add component */}
-
       <div className="CalendarPanel">
         {CONST.WEEK.map((weekDay) => (
           <div className="CalendarPanelItem" key={weekDay}>
             {weekDay}
           </div>
         ))}
-        {dateCells.map(({ date, month: m, year: y, type }) => {
-          const isSelectedDate = date === day && m === nMonth && y === year; //текущая дата
-          const isTodayDate = isToday(todayDate, {
-            date,
-            month: m,
-            year: y,
-            type,
+        {dateCells.map((cell) => {
+          const isSelectedDate =
+            cell.date === day && cell.month === nMonth && cell.year === year; //текущая дата
+          const isTodayDate = isToday(todayDate, cell);
+          const isNotCurrent = cell.type !== "current";
+          // const dateValue = new Date(cell.year, cell.month, cell.date);
+
+          const isDateInRange = isInRange({
+            // value: dateValue,
+            cell,
+            min,
+            max,
           });
-          const isNotCurrent = type !== "current";
 
           return (
             <div
-              key={`${date}.${m}`}
-              className="CalendarPanelItem"
-              onClick={() => onDateSelect({ date, month: m, year: y, type })}
+              key={`${cell.date}.${cell.month}`}
+              className={clsx(
+                "CalendarPanelItem",
+                isDateInRange && "CalendarPanelItem--not-in-range"
+              )}
+              onClick={() => !isDateInRange && onDateSelect(cell)}
             >
               <span
                 className={clsx(
-                  isSelectedDate && "CurrentDate-selected",
-                  isTodayDate && "CurrentDate-today",
-                  isNotCurrent && "CurrentDate-not-current-month"
+                  isSelectedDate && "CurrentDate--selected",
+                  isTodayDate && "CurrentDate--today",
+                  isNotCurrent && "CurrentDate--not-current-month"
                 )}
               >
-                {date}
+                {cell.date}
               </span>
             </div>
           );

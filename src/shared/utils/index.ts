@@ -5,15 +5,20 @@ import {
   getCurrentMonthDays as current,
 } from "./getMonthDate";
 
-export const getMonthDays = {
-  number,
-  next,
-  prev,
-  current,
-};
+//
+// exports
+//
 
 export * from "./addZero";
 export * from "./isValidDateString";
 export * from "./getInputValueFromDate";
 export * from "./updateValueFromInput";
 export * from "./isToday";
+export * from "./isInRange";
+
+export const getMonthDays = {
+  number,
+  next,
+  prev,
+  current,
+};

@@ -19,22 +19,27 @@
   cursor: pointer;
 }
 
+.CalendarPanelItem--not-in-range {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .CalendarPanelItem > span {
   width: 26px;
   height: 26px;
 }
 
-.CurrentDate-selected {
+.CurrentDate--selected {
   background-color: brown;
   border-radius: 50%;
 }
 
-.CurrentDate-today {
+.CurrentDate--today {
   border-radius: 50%;
   border: 1px solid brown;
 }
 
-.CurrentDate-not-current-month {
+.CurrentDate--not-current-month {
   opacity: 0.4;
 }
 

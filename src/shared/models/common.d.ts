@@ -8,3 +8,9 @@ interface DateCellItem {
   isToday?: boolean;
   isSelected?: boolean;
 }
+
+interface DateCell {
+  date: Date;
+  value?: Date;
+  cell: DateCellItem;
+}

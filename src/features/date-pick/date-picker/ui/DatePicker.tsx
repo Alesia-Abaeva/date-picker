@@ -1,20 +1,70 @@
 import * as React from "react";
 import { useLatest } from "shared/hook";
-import { getInputValueFromDate, updateValueFromInput } from "shared/utils";
+import {
+  getInputValueFromDate,
+  isInRange,
+  updateValueFromInput,
+} from "shared/utils";
 import { CalendarPopup } from "./components";
 import "./DatePicker.css";
 
-const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
+interface DatePickerProps {
+  value: Date;
+  onChange: (value: Date) => void;
+
+  min?: Date;
+  max?: Date;
+}
+
+const DatePicker: React.FC<DatePickerProps> = ({
+  value,
+  onChange,
+  min,
+  max,
+}) => {
   const [showPopup, setShowPopup] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
   const ref = React.useRef<HTMLDivElement>(null);
-  const latestInputValue = useLatest(inputValue);
-  const latestValue = useLatest(value);
 
   React.useLayoutEffect(() => {
     setInputValue(getInputValueFromDate(value));
   }, [value]);
   // так как мы не можем гарантировать, что вне компонента value не будет меняться
+
+  const updateValueOnPopupCloseAction = () => {
+    const date = updateValueFromInput(inputValue);
+
+    //
+
+    setShowPopup(false);
+
+    if (!date) {
+      // input value is invalid
+      // reset the date
+      setInputValue(getInputValueFromDate(value));
+      return;
+    }
+
+    //
+    const isDateInRange = isInRange({
+      cell: {
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        date: date.getDate(),
+        type: "current",
+      },
+      min,
+      max,
+    });
+
+    if (isDateInRange) {
+      return;
+    }
+
+    onChange(date);
+  };
+
+  const latestUpdateValueFromInput = useLatest(updateValueOnPopupCloseAction);
 
   // эффект, который открывает и закрывает поп-ап
   React.useEffect(() => {
@@ -40,13 +90,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         return;
       }
 
-      const dateFromInputValue = updateValueFromInput(latestInputValue.current);
-
-      if (dateFromInputValue) {
-        onChange(dateFromInputValue);
-      }
-      setInputValue(getInputValueFromDate(latestValue.current));
-      setShowPopup(false);
+      latestUpdateValueFromInput.current();
     };
 
     document.addEventListener("click", onDocumentClick);
@@ -54,7 +98,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     return () => {
       document.removeEventListener("click", onDocumentClick);
     };
-  }, [latestInputValue]);
+  }, [latestUpdateValueFromInput]);
 
   const handleChange = (value: Date) => {
     onChange(value);
@@ -81,6 +125,8 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     } else {
       handleChange(value);
     }
+
+    // updateValueOnPopupCloseAction();
   };
 
   // use memo for update input value
@@ -112,6 +158,8 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
               selectedValue={value}
               onChange={handleChange}
               inputValue={inputValueDate}
+              min={min}
+              max={max}
             />
           </div>
         )}
