@@ -1,4 +1,5 @@
 import * as React from "react";
+import { clsx } from "clsx";
 import { useLatest } from "shared/hook";
 import {
   getInputValueFromDate,
@@ -54,6 +55,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     });
 
     if (isDateInRange) {
+      setInputValue(getInputValueFromDate(value));
       return;
     }
 
@@ -122,15 +124,26 @@ const DatePicker: React.FC<DatePickerProps> = ({
   };
 
   // use memo for update input value
-  const inputValueDate = React.useMemo(() => {
-    const dateObject = updateValueFromInput(inputValue);
+  const [inputValueDate, isValidInputValue] = React.useMemo(() => {
+    const date = updateValueFromInput(inputValue);
 
-    if (!dateObject) {
-      return;
+    if (!date) {
+      return [undefined, false];
     }
 
-    return dateObject;
-  }, [inputValue]);
+    const isDateInRange = isInRange({
+      cell: {
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        date: date.getDate(),
+        type: "current",
+      },
+      min,
+      max,
+    });
+
+    return [date, !isDateInRange];
+  }, [inputValue, min, max]);
 
   return (
     <>
@@ -143,6 +156,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           value={inputValue}
           onChange={onInputValueChange}
           onKeyDown={onKeyDown}
+          className={clsx(!isValidInputValue && "CalendarInput--invalid")}
         />
         {showPopup && (
           <div className="CalendarWrapper">

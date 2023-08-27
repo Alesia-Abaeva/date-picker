@@ -10,3 +10,8 @@
   /* position: absolute; */
   top: 100%;
 }
+
+.CalendarInput--invalid {
+  border-color: red;
+  color: red;
+}
