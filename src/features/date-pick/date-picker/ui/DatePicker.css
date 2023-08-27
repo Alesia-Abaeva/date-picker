@@ -7,8 +7,11 @@
 }
 
 .CalendarWrapper {
-  /* position: absolute; */
   top: 100%;
+}
+
+.CalendarInput {
+  padding: 10px;
 }
 
 .CalendarInput--invalid {

@@ -126,12 +126,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
     }
 
     const isDateInRange = isInRange({
-      // cell: {
-      //   year: date.getFullYear(),
-      //   month: date.getMonth(),
-      //   date: date.getDate(),
-      //   type: "current",
-      // },
       min,
       max,
       value: date,
@@ -151,7 +145,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
           value={inputValue}
           onChange={onInputValueChange}
           onKeyDown={onKeyDown}
-          className={clsx(!isValidInputValue && "CalendarInput--invalid")}
+          className={clsx(
+            "CalendarInput",
+            !isValidInputValue && "CalendarInput--invalid"
+          )}
         />
         {showPopup && (
           <div className="CalendarWrapper">

@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import { CONST } from "shared/const";
 import { getMonthDays, isInRange, isToday } from "shared/utils";
 import "./CalendarPopup.css";
+
 interface CalendarPopupProps {
   selectedValue: Date; // значение которое выбранно пользователем
   inputValue?: Date;
@@ -27,8 +28,6 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
   );
 
   const todayDate = React.useMemo(() => new Date(), []);
-
-  console.log(selectedValue, "SELE");
 
   // Почему useLayoutEffect? Не будет моргания в интерфейсе, то есть сначала компонент отрендерился по статике, потом по измененным.
   // useLayoutEffect вызывается синхронно, после того как вызывался DOM, то есть у нас обновится опять стейт, и компонент заново перерендерится
@@ -96,19 +95,15 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
 
   return (
     <>
-      <div>DATE</div>
-      <div>
-        SELECTED: {day} {month} {year}
+      <div className="SelectedDate">
+        {month} {year}
       </div>
-      <div>
-        PANEL: {day} {panelMonth + 1} {panelYear}
-      </div>
-
       <div className="Controller">
-        <button onClick={prevYear}>prev year</button>
-        <button onClick={prevMonth}>prev month</button>
-        <button onClick={nextMonth}>next month</button>
-        <button onClick={nextYear}>next year</button>
+        <button onClick={prevYear}>Prev Year</button>
+        <button onClick={prevMonth}>Prev Month</button>
+        <div />
+        <button onClick={nextMonth}>Next Month</button>
+        <button onClick={nextYear}>Next year</button>
       </div>
 
       <div className="CalendarPanel">

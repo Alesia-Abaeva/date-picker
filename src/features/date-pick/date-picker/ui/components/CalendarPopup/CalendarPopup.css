@@ -21,6 +21,7 @@
 
 .CalendarPanelItem--not-in-range {
   opacity: 0.5;
+  color: #747bff;
   cursor: not-allowed;
 }
 
@@ -30,21 +31,37 @@
 }
 
 .CurrentDate--selected {
-  background-color: brown;
+  background-color: #747bff;
   border-radius: 50%;
 }
 
 .CurrentDate--today {
   border-radius: 50%;
-  border: 1px solid brown;
+  border: 1px solid #747bff;
 }
 
 .CurrentDate--not-current-month {
   opacity: 0.4;
+  /* color: #747bff; */
 }
 
 .Controller {
   display: flex;
-  margin: 12px 0px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0px 15px 0px;
   gap: 8px;
+}
+
+.Controller > button {
+  width: 140px;
+}
+
+.Controller > div {
+  width: 60px;
+}
+
+.SelectedDate {
+  font-size: large;
+  margin-top: 20px;
 }
