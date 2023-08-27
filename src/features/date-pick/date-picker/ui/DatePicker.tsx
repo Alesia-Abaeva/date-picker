@@ -30,12 +30,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
   }, [value]);
   // так как мы не можем гарантировать, что вне компонента value не будет меняться
 
-  const updateValueOnPopupCloseAction = () => {
-    const date = updateValueFromInput(inputValue);
-
-    //
-
+  const update = () => {
     setShowPopup(false);
+    const date = updateValueFromInput(inputValue);
 
     if (!date) {
       // input value is invalid
@@ -61,6 +58,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
     }
 
     onChange(date);
+  };
+
+  const updateValueOnPopupCloseAction = () => {
+    update();
   };
 
   const latestUpdateValueFromInput = useLatest(updateValueOnPopupCloseAction);
@@ -117,33 +118,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       return;
     }
 
-    const dateObject = updateValueFromInput(inputValue);
-
-    if (!dateObject) {
-      // проверка на введение в инпут значения в формате даты
-      setInputValue(getInputValueFromDate(value));
-      return;
-    }
-
-    const isDateInRange = isInRange({
-      min,
-      max,
-      cell: {
-        date: dateObject?.getDate(),
-        month: dateObject.getMonth(),
-        year: dateObject.getFullYear(),
-        type: "current",
-      },
-    });
-
-    if (isDateInRange) {
-      // проверка на значение в диапазоне
-      // TODO: всплывалка для оповещения об невалидном значении
-      setInputValue(getInputValueFromDate(value));
-      return;
-    }
-
-    handleChange(value);
+    update();
   };
 
   // use memo for update input value
