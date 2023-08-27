@@ -10,7 +10,7 @@ function App() {
       <Features.DatePicker
         value={date}
         onChange={setDate}
-        min={new Date(2023, 8, 12)}
+        min={new Date(2023, 8, 12)} // минимальное значение, которое можно выбрать
         max={new Date(2023, 9, 12)}
       />
     </>

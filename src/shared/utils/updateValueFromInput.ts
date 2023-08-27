@@ -7,8 +7,6 @@ export const updateValueFromInput = (inputValue: string) => {
     return;
   }
 
-  // console.log(inputValue);
-
   const { date, month, year } = parseToDate(inputValue);
   const dateObject = new Date(year, month - 1, date);
 

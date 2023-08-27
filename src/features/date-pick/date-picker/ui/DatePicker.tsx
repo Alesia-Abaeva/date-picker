@@ -11,7 +11,6 @@ import "./DatePicker.css";
 interface DatePickerProps {
   value: Date;
   onChange: (value: Date) => void;
-
   min?: Date;
   max?: Date;
 }
@@ -121,12 +120,30 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const dateObject = updateValueFromInput(inputValue);
 
     if (!dateObject) {
+      // проверка на введение в инпут значения в формате даты
       setInputValue(getInputValueFromDate(value));
-    } else {
-      handleChange(value);
+      return;
     }
 
-    // updateValueOnPopupCloseAction();
+    const isDateInRange = isInRange({
+      min,
+      max,
+      cell: {
+        date: dateObject?.getDate(),
+        month: dateObject.getMonth(),
+        year: dateObject.getFullYear(),
+        type: "current",
+      },
+    });
+
+    if (isDateInRange) {
+      // проверка на значение в диапазоне
+      // TODO: всплывалка для оповещения об невалидном значении
+      setInputValue(getInputValueFromDate(value));
+      return;
+    }
+
+    handleChange(value);
   };
 
   // use memo for update input value
