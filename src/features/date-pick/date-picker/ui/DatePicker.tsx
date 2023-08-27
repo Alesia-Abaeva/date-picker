@@ -42,16 +42,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
       return;
     }
 
-    //
     const isDateInRange = isInRange({
-      cell: {
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        date: date.getDate(),
-        type: "current",
-      },
       min,
       max,
+      value: date,
     });
 
     if (isDateInRange) {
@@ -132,14 +126,15 @@ const DatePicker: React.FC<DatePickerProps> = ({
     }
 
     const isDateInRange = isInRange({
-      cell: {
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        date: date.getDate(),
-        type: "current",
-      },
+      // cell: {
+      //   year: date.getFullYear(),
+      //   month: date.getMonth(),
+      //   date: date.getDate(),
+      //   type: "current",
+      // },
       min,
       max,
+      value: date,
     });
 
     return [date, !isDateInRange];

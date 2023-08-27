@@ -106,9 +106,9 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
 
       <div className="Controller">
         <button onClick={prevYear}>prev year</button>
-        <button onClick={nextYear}>next year</button>
         <button onClick={prevMonth}>prev month</button>
         <button onClick={nextMonth}>next month</button>
+        <button onClick={nextYear}>next year</button>
       </div>
 
       <div className="CalendarPanel">
@@ -122,11 +122,10 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
             cell.date === day && cell.month === nMonth && cell.year === year; //текущая дата
           const isTodayDate = isToday(todayDate, cell);
           const isNotCurrent = cell.type !== "current";
-          // const dateValue = new Date(cell.year, cell.month, cell.date);
+          const dateValue = new Date(cell.year, cell.month, cell.date);
 
           const isDateInRange = isInRange({
-            // value: dateValue,
-            cell,
+            value: dateValue,
             min,
             max,
           });

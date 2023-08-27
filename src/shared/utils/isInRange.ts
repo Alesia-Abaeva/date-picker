@@ -1,65 +1,64 @@
 interface Range {
   min?: Date;
   max?: Date;
-  value?: Date;
-  cell: DateCellItem;
+  value: Date;
 }
 
-export const isInRange = ({ min, max, cell }: Range) => {
+export const isInRange = ({ min, max, value }: Range) => {
   if (min && max) {
     return (
-      isSmallerThanDate({ cell, date: max }) &&
-      isBiggerThanDate({ cell, date: min })
+      isSmallerThanDate({ value, date: max }) &&
+      isBiggerThanDate({ value, date: min })
     );
   }
 
   if (min) {
-    return isBiggerThanDate({ cell, date: min });
+    return isBiggerThanDate({ value, date: min });
   }
 
   if (max) {
-    return isSmallerThanDate({ cell, date: max });
+    return isSmallerThanDate({ value, date: max });
   }
 
   return true;
 };
 
-const isBiggerThanDate = ({ date, cell }: DateCell) => {
-  if (cell?.year > date.getFullYear()) {
+const isBiggerThanDate = ({ date, value }: DateCell) => {
+  if (value.getFullYear() > date.getFullYear()) {
     return true;
   }
 
-  if (cell?.year < date.getFullYear()) {
+  if (value.getFullYear() < date.getFullYear()) {
     return false;
   }
 
-  if (cell.month > date.getMonth()) {
+  if (value.getMonth() > date.getMonth()) {
     return true;
   }
 
-  if (cell.month < date.getMonth()) {
+  if (value.getMonth() < date.getMonth()) {
     return false;
   }
 
-  return cell.date >= date.getDate();
+  return value.getDate() >= date.getDate();
 };
 
-const isSmallerThanDate = ({ date, cell }: DateCell) => {
-  if (cell.year > date.getFullYear()) {
+const isSmallerThanDate = ({ date, value }: DateCell) => {
+  if (value.getFullYear() > date.getFullYear()) {
     return false;
   }
 
-  if (cell.year < date.getFullYear()) {
+  if (value.getFullYear() < date.getFullYear()) {
     return true;
   }
 
-  if (cell.month > date.getMonth()) {
+  if (value.getMonth() > date.getMonth()) {
     return false;
   }
 
-  if (cell.month < date.getMonth()) {
+  if (value.getMonth() < date.getMonth()) {
     return true;
   }
 
-  return cell.date <= date.getDate();
+  return value.getDate() <= date.getDate();
 };

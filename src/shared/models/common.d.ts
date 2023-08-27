@@ -11,6 +11,6 @@ interface DateCellItem {
 
 interface DateCell {
   date: Date;
-  value?: Date;
-  cell: DateCellItem;
+  value: Date;
+  cell?: DateCellItem;
 }
