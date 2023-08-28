@@ -140,6 +140,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       <h4>To select or input a date.</h4>
       <div className="CalendarContainer" ref={ref}>
         <input
+          data-testid="date-picker-input"
           type="text"
           onClick={onFocus}
           value={inputValue}
