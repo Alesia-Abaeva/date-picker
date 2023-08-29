@@ -12,5 +12,6 @@ export default {
     "features/(.*)": "<rootDir>/src/features/$1",
     "shared/(.*)": "<rootDir>/src/shared/$1",
   },
+  moduleDirectories: ["<rootDir>/node_modules", "<rootDir>/src"],
   //   modulePaths: ["src/"],
 };

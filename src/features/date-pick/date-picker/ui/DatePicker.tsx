@@ -138,7 +138,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
     <>
       <h1>DatePicker </h1>
       <h4>To select or input a date.</h4>
-      <div className="CalendarContainer" ref={ref}>
+      <div
+        className="CalendarContainer"
+        ref={ref}
+        // data-testid="date-picker-input"
+      >
         <input
           data-testid="date-picker-input"
           type="text"
@@ -152,7 +156,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           )}
         />
         {showPopup && (
-          <div className="CalendarWrapper">
+          <div className="CalendarWrapper" data-testid="date-picker-popup">
             <CalendarPopup
               selectedValue={value}
               onChange={handleChange}
