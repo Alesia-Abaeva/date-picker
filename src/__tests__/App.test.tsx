@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Features } from "features/date-pick";
+import * as React from "react";
 
 describe("Date Picker test", () => {
   it("should show correct date in input", () => {
@@ -12,27 +13,26 @@ describe("Date Picker test", () => {
     expect(screen.getByTestId("date-picker-input")).toHaveValue("28-08-2023");
   });
 
-  it("should open popup when click on input", () => {
-    const mockedFunction = jest.fn();
+  it("should open popup when click on input", async () => {
     const min = new Date(2023, 7, 28);
     const max = new Date(2023, 9, 28);
+
+    const a = React;
+    console.log(a);
 
     render(
       <Features.DatePicker
         value={new Date(2024, 7, 20)}
         min={min}
         max={max}
-        onChange={mockedFunction}
+        onChange={() => {}}
       />
     );
     const input = screen.getByTestId("date-picker-input");
-    userEvent.click(input);
 
-    // const element = screen.getByTestId("date-picker-popup");
-    // console.log(element);
-    // expect(screen.getByTestId("date-picker-input")).toHaveFocus();
+    await userEvent.click(input);
 
-    expect(screen.getByTestId("date-picker-popup")).toBeInTheDocument();
+    expect(screen.queryByTestId("dp-popup")).toBeInTheDocument();
   });
 
   // it("should close popup when  we click on outside", () => {
