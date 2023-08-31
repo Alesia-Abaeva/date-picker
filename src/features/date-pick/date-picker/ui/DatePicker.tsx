@@ -65,14 +65,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
   // эффект, который открывает и закрывает поп-ап
   React.useEffect(() => {
     const element = ref.current;
-    console.log("CLICK -1", element);
 
     if (!element) return;
 
     const onDocumentClick = (e: MouseEvent) => {
       const target = e.target;
-
-      console.log("CLICK -2", target);
 
       /**
        * Checking for typing.
@@ -109,7 +106,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
   };
 
   const onFocus = () => {
-    console.log("CLICK");
     setShowPopup(true);
   };
 

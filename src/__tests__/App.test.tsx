@@ -2,7 +2,6 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Features } from "features/date-pick";
-import * as React from "react";
 
 describe("Date Picker test", () => {
   it("should show correct date in input", () => {
@@ -16,9 +15,6 @@ describe("Date Picker test", () => {
   it("should open popup when click on input", async () => {
     const min = new Date(2023, 7, 28);
     const max = new Date(2023, 9, 28);
-
-    const a = React;
-    console.log(a);
 
     render(
       <Features.DatePicker
@@ -35,20 +31,19 @@ describe("Date Picker test", () => {
     expect(screen.queryByTestId("dp-popup")).toBeInTheDocument();
   });
 
-  // it("should close popup when  we click on outside", () => {
-  //   render(
-  //     <Features.DatePicker value={new Date(2023, 7, 28)} onChange={() => {}} />
-  //   );
+  it("should close popup when  we click on outside", async () => {
+    render(
+      <Features.DatePicker value={new Date(2023, 7, 28)} onChange={() => {}} />
+    );
 
-  //   // open popup
-  //   userEvent.click(screen.getByTestId("date-picker-input"));
+    // open popup
+    userEvent.click(screen.getByTestId("date-picker-input"));
+    expect(screen.queryByTestId("date-picker-input")).toBeInTheDocument();
 
-  //   expect(screen.queryByTestId("date-picker-input")).toBeInTheDocument();
-
-  //   // close popup
-  //   userEvent.click(document.documentElement);
-  //   expect(screen.queryByTestId("date-picker-popup")).not.toBeInTheDocument();
-  // });
+    // close popup
+    await userEvent.click(document.documentElement);
+    expect(screen.queryByTestId("dp-popup")).not.toBeInTheDocument();
+  });
 
   // it("should highlight today");
 

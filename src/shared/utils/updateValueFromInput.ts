@@ -2,8 +2,6 @@ import { isValidDateString, parseToDate } from "shared/utils";
 /** проверяем валидное ли значение ввели в инпуте, если да - парсим и возвращаем объект даты */
 export const updateValueFromInput = (inputValue: string) => {
   if (!isValidDateString(inputValue)) {
-    console.log(inputValue, "isValidDateString");
-
     return;
   }
 
