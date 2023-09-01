@@ -3,22 +3,36 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Features } from "features/date-pick";
 
-describe("Date Picker test", () => {
-  it("should show correct date in input", () => {
-    render(
-      <Features.DatePicker value={new Date(2023, 7, 28)} onChange={() => {}} />
-    );
+const min = new Date(2023, 7, 28);
+const max = new Date(2023, 7, 29);
+const initialDate = new Date(2024, 7, 28);
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
 
-    expect(screen.getByTestId("date-picker-input")).toHaveValue("28-08-2023");
+// add a day
+
+// const todayDate = new Date(2024, 7, 29);
+// const RealDate = Date;
+
+describe("Date Picker test", () => {
+  // beforeEach(() => {
+  //   global.Date.now = () => +todayDate;
+  // });
+
+  // afterEach(() => {
+  //   global.Date = RealDate;
+  // });
+
+  it("should show correct date in input", () => {
+    render(<Features.DatePicker value={initialDate} onChange={() => {}} />);
+
+    expect(screen.getByTestId("date-picker-input")).toHaveValue("28-08-2024");
   });
 
   it("should open popup when click on input", async () => {
-    const min = new Date(2023, 7, 28);
-    const max = new Date(2023, 9, 28);
-
     render(
       <Features.DatePicker
-        value={new Date(2024, 7, 20)}
+        value={initialDate}
         min={min}
         max={max}
         onChange={() => {}}
@@ -32,9 +46,7 @@ describe("Date Picker test", () => {
   });
 
   it("should close popup when  we click on outside", async () => {
-    render(
-      <Features.DatePicker value={new Date(2023, 7, 28)} onChange={() => {}} />
-    );
+    render(<Features.DatePicker value={initialDate} onChange={() => {}} />);
 
     // open popup
     userEvent.click(screen.getByTestId("date-picker-input"));
@@ -45,7 +57,25 @@ describe("Date Picker test", () => {
     expect(screen.queryByTestId("dp-popup")).not.toBeInTheDocument();
   });
 
-  // it("should highlight today");
+  it("should highlight today", async () => {
+    render(<Features.DatePicker value={tomorrow} onChange={() => {}} />);
+
+    // open popup
+    await userEvent.click(screen.getByTestId("date-picker-input"));
+    expect(screen.queryByTestId("dp-popup")).toBeInTheDocument();
+
+    const today = screen
+      .getAllByTestId("date-picker-popup-cell-date")
+      .filter((item) => item.classList.contains("CurrentDate--today"));
+
+    console.log(today);
+
+    expect(today[0]).toHaveClass("CurrentDate--today");
+    expect(today).toHaveLength(1);
+    // expect(today).toBeInTheDocument();
+
+    // date-picker-popup-cell
+  });
 
   // it("should select date");
 

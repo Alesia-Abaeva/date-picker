@@ -138,7 +138,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
     <>
       <h1>DatePicker </h1>
       <h4>To select or input a date.</h4>
-      <div className="CalendarContainer" ref={ref} data-testid="date-picker-i">
+      <div
+        className="CalendarContainer"
+        ref={ref}
+        data-testid="date-picker-view"
+      >
         <input
           data-testid="date-picker-input"
           type="text"

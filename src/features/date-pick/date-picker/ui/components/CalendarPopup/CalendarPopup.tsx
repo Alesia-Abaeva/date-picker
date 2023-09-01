@@ -133,8 +133,10 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
                 isDateInRange && "CalendarPanelItem--not-in-range"
               )}
               onClick={() => !isDateInRange && onDateSelect(cell)}
+              data-testid="date-picker-popup-cell"
             >
               <span
+                data-testid="date-picker-popup-cell-date"
                 className={clsx(
                   isSelectedDate && "CurrentDate--selected",
                   isTodayDate && "CurrentDate--today",

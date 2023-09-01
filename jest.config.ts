@@ -3,7 +3,6 @@ export default {
   testEnvironment: "jest-environment-jsdom",
   transform: {
     "^.+\\.tsx?$": "ts-jest",
-    // process `*.tsx` files with `ts-jest`
   },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   moduleNameMapper: {
@@ -13,5 +12,4 @@ export default {
     "shared/(.*)": "<rootDir>/src/shared/$1",
   },
   moduleDirectories: ["<rootDir>/node_modules", "<rootDir>/src"],
-  //   modulePaths: ["src/"],
 };
