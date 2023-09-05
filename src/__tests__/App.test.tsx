@@ -2,42 +2,51 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Features } from "features/date-pick";
+import React from "react";
 
 const min = new Date(2023, 7, 28);
 const max = new Date(2023, 7, 29);
 const initialDate = new Date(2024, 7, 28);
+const initialDateString = "28-08-2024";
 const todayDate = new Date();
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-// add a day
+const TestApp = ({
+  value = initialDate,
+  onChange,
+  min,
+  max,
+}: DatePickerProps) => {
+  const [date, setDate] = React.useState(value);
 
-// const todayDate = new Date(2024, 7, 29);
-// const RealDate = Date;
+  const handleChange = (value: Date) => {
+    onChange?.(value);
+    setDate(value);
+  };
+
+  return (
+    <Features.DatePicker
+      value={date}
+      min={min}
+      max={max}
+      onChange={handleChange}
+    />
+  );
+};
 
 describe("Date Picker test", () => {
-  // beforeEach(() => {
-  //   global.Date.now = () => +todayDate;
-  // });
-
-  // afterEach(() => {
-  //   global.Date = RealDate;
-  // });
-
   it("should show correct date in input", () => {
-    render(<Features.DatePicker value={initialDate} onChange={() => {}} />);
+    render(<TestApp value={initialDate} onChange={() => {}} />);
 
-    expect(screen.getByTestId("date-picker-input")).toHaveValue("28-08-2024");
+    expect(screen.getByTestId("date-picker-input")).toHaveValue(
+      initialDateString
+    );
   });
 
   it("should open popup when click on input", async () => {
     render(
-      <Features.DatePicker
-        value={initialDate}
-        min={min}
-        max={max}
-        onChange={() => {}}
-      />
+      <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
     );
     const input = screen.getByTestId("date-picker-input");
 
@@ -47,7 +56,7 @@ describe("Date Picker test", () => {
   });
 
   it("should close popup when  we click on outside", async () => {
-    render(<Features.DatePicker value={initialDate} onChange={() => {}} />);
+    render(<TestApp value={initialDate} onChange={() => {}} />);
 
     // open popup
     userEvent.click(screen.getByTestId("date-picker-input"));
@@ -59,7 +68,7 @@ describe("Date Picker test", () => {
   });
 
   it("should highlight today", async () => {
-    render(<Features.DatePicker value={tomorrow} onChange={() => {}} />);
+    render(<TestApp value={tomorrow} onChange={() => {}} />);
 
     // open popup
     await userEvent.click(screen.getByTestId("date-picker-input"));
@@ -77,7 +86,7 @@ describe("Date Picker test", () => {
   });
 
   it("should highlight selected date", async () => {
-    render(<Features.DatePicker value={initialDate} onChange={() => {}} />);
+    render(<TestApp value={initialDate} onChange={() => {}} />);
 
     // open popup
     await userEvent.click(screen.getByTestId("date-picker-input"));
@@ -98,12 +107,7 @@ describe("Date Picker test", () => {
     const onChange = jest.fn();
 
     render(
-      <Features.DatePicker
-        value={initialDate}
-        min={min}
-        max={max}
-        onChange={onChange}
-      />
+      <TestApp value={initialDate} min={min} max={max} onChange={onChange} />
     );
 
     const input = screen.getByTestId("date-picker-input");
@@ -121,20 +125,181 @@ describe("Date Picker test", () => {
     expect(screen.queryByTestId("dp-popup")).not.toBeInTheDocument();
     expect(onChange).toBeCalledTimes(1);
     expect(onChange).toBeCalledWith(new Date(2024, 7, 15));
-    expect(input).toHaveValue("15-08-2022");
+    expect(input).toHaveValue("15-08-2024");
   });
 
-  // it("should apply valid date from input on outside click");
+  it("should apply valid date from input on outside click", async () => {
+    const onChange = jest.fn();
 
-  // it("should reset invalid date from input on outside click");
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={onChange} />
+    );
 
-  // it("should show correct month in popup");
-  // it("should move to the prev month");
-  // it("should move to the next month");
-  // it("should move to the prev year");
-  // it("should move to the next year");
+    const input = screen.getByTestId("date-picker-input");
 
-  // it("should update popup calendar when we update input value ");
+    await userEvent.clear(input);
+    await userEvent.type(input, "31-08-2024");
+
+    // outside click
+    await userEvent.click(document.documentElement);
+
+    expect(onChange).toBeCalledWith(new Date(2024, 7, 31));
+  });
+
+  it("should reset invalid date from input on outside click", async () => {
+    const onChange = jest.fn();
+
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={onChange} />
+    );
+
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "35-08-2024");
+
+    // outside click
+    await userEvent.click(document.documentElement);
+
+    expect(onChange).not.toBeCalledWith();
+    expect(input).toHaveValue(initialDateString);
+  });
+
+  it("should show correct month in popup", async () => {
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
+    );
+
+    const initMonth = "August 2024";
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.click(input);
+    const month = screen.getByTestId("calendar-popup-month");
+
+    expect(month).toHaveTextContent(initMonth);
+  });
+  it("should move to the prev month", async () => {
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
+    );
+
+    const prevMonth = "July 2024";
+    const prevPrevMonth = "June 2024";
+
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.click(input);
+
+    const btn = screen.getByTestId("calendar-btn-prev-month");
+    const month = screen.getByTestId("calendar-popup-month");
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent(prevMonth);
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent(prevPrevMonth);
+  });
+
+  it("should move to the next month", async () => {
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
+    );
+
+    const nextMonth = "September 2024";
+    const nextNextMonth = "October 2024";
+
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.click(input);
+
+    const btn = screen.getByTestId("calendar-btn-next-month");
+    const month = screen.getByTestId("calendar-popup-month");
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent(nextMonth);
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent(nextNextMonth);
+  });
+
+  it("should move to the prev year", async () => {
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
+    );
+
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.click(input);
+
+    const btn = screen.getByTestId("calendar-btn-next-year");
+    const month = screen.getByTestId("calendar-popup-month");
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent("August 2025");
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent("August 2026");
+  });
+
+  it("should move to the next year", async () => {
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
+    );
+
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.click(input);
+
+    const btn = screen.getByTestId("calendar-btn-prev-year");
+    const month = screen.getByTestId("calendar-popup-month");
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent("August 2023");
+
+    await userEvent.click(btn);
+
+    expect(month).toHaveTextContent("August 2022");
+  });
+
+  it("should update popup calendar when we update input value ", async () => {
+    const onChange = jest.fn();
+
+    render(
+      <TestApp value={initialDate} min={min} max={max} onChange={onChange} />
+    );
+
+    const input = screen.getByTestId("date-picker-input");
+
+    await userEvent.click(input);
+
+    const month = screen.getByTestId("calendar-popup-month");
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "01-08-2024");
+
+    // outside click
+
+    expect(input).toHaveValue("01-08-2024");
+    expect(month).toHaveTextContent("August 2024");
+
+    await userEvent.click(input);
+
+    await userEvent.clear(input);
+    await userEvent.type(input, "01-08-2022");
+
+    // outside click
+    // await userEvent.click(document.documentElement);
+
+    expect(input).toHaveValue("01-08-2022");
+    expect(month).toHaveTextContent("August 2022");
+  });
 
   // describe("test min max range", () => {
   //   it("should disable dates uot of range");

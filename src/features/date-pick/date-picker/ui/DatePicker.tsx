@@ -9,13 +9,6 @@ import {
 import { CalendarPopup } from "./components";
 import "./DatePicker.css";
 
-interface DatePickerProps {
-  value: Date;
-  onChange: (value: Date) => void;
-  min?: Date;
-  max?: Date;
-}
-
 const DatePicker: React.FC<DatePickerProps> = ({
   value,
   onChange,

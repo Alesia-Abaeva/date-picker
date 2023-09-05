@@ -37,15 +37,15 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
     }
 
     setPanelMonth(inputValue.getMonth());
+    setPanelYear(inputValue.getFullYear());
   }, [inputValue]);
 
-  const [year, month, day, nMonth] = React.useMemo(() => {
+  const [year, day, nMonth] = React.useMemo(() => {
     const currentYear = selectedValue.getFullYear();
     const currentDate = selectedValue.getDate();
-    const currentMonth = CONST.MONTHS[selectedValue.getMonth()];
     const numberMonth = selectedValue.getMonth();
 
-    return [currentYear, currentMonth, currentDate, numberMonth];
+    return [currentYear, currentDate, numberMonth];
   }, [selectedValue]);
 
   const dateCells = React.useMemo<DateCellItem[]>(() => {
@@ -61,6 +61,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
 
     return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
   }, [panelYear, panelMonth]);
+
   //   date cell in the calendar
 
   const nextYear = () => {
@@ -95,15 +96,23 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
 
   return (
     <>
-      <div className="SelectedDate">
-        {month} {year}
+      <div className="SelectedDate" data-testid="calendar-popup-month">
+        {CONST.MONTHS[panelMonth]} {panelYear}
       </div>
       <div className="Controller">
-        <button onClick={prevYear}>Prev Year</button>
-        <button onClick={prevMonth}>Prev Month</button>
+        <button onClick={prevYear} data-testid="calendar-btn-prev-year">
+          Prev Year
+        </button>
+        <button onClick={prevMonth} data-testid="calendar-btn-prev-month">
+          Prev Month
+        </button>
         <div />
-        <button onClick={nextMonth}>Next Month</button>
-        <button onClick={nextYear}>Next year</button>
+        <button onClick={nextMonth} data-testid="calendar-btn-next-month">
+          Next Month
+        </button>
+        <button onClick={nextYear} data-testid="calendar-btn-next-year">
+          Next Year
+        </button>
       </div>
 
       <div className="CalendarPanel">
