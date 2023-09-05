@@ -5,7 +5,7 @@ import { getMonthDays, isInRange, isToday } from "shared/utils";
 import "./CalendarPopup.css";
 
 interface CalendarPopupProps {
-  selectedValue: Date; // значение которое выбранно пользователем
+  selectedValue: Date; // the value selected by the user
   inputValue?: Date;
   onChange: (value: Date) => void;
   min?: Date;
@@ -19,7 +19,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
   min,
   max,
 }) => {
-  // variables responsible for the year and month in the panel
+  // variables responsible for the year and month in the calendar panel
   const [panelYear, setPanelYear] = React.useState(() =>
     selectedValue.getFullYear()
   );
@@ -29,8 +29,13 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
 
   const todayDate = React.useMemo(() => new Date(), []);
 
-  // Почему useLayoutEffect? Не будет моргания в интерфейсе, то есть сначала компонент отрендерился по статике, потом по измененным.
-  // useLayoutEffect вызывается синхронно, после того как вызывался DOM, то есть у нас обновится опять стейт, и компонент заново перерендерится
+  /**
+   * Why useLayoutEffect?
+   * There will be no blinking in the interface, that is, first the component was rendered according to statics, then according to already changed values.
+   * useLayoutEffect is called synchronously, after the DOM has been called,
+   * that is, we will update the state again, and the component will be re-rendered
+   */
+
   React.useLayoutEffect(() => {
     if (!inputValue) {
       return;
@@ -61,8 +66,6 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
 
     return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
   }, [panelYear, panelMonth]);
-
-  //   date cell in the calendar
 
   const nextYear = () => {
     setPanelYear(panelYear + 1);
@@ -123,7 +126,7 @@ const CalendarPopup: React.FC<CalendarPopupProps> = ({
         ))}
         {dateCells.map((cell) => {
           const isSelectedDate =
-            cell.date === day && cell.month === nMonth && cell.year === year; //текущая дата
+            cell.date === day && cell.month === nMonth && cell.year === year; // current date
           const isTodayDate = isToday(todayDate, cell);
           const isNotCurrent = cell.type !== "current";
           const dateValue = new Date(cell.year, cell.month, cell.date);

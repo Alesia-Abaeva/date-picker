@@ -22,7 +22,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
   React.useLayoutEffect(() => {
     setInputValue(getInputValueFromDate(value));
   }, [value]);
-  // так как мы не можем гарантировать, что вне компонента value не будет меняться
+  // since we can't prove that the value outside the component won't change
 
   const update = () => {
     setShowPopup(false);
@@ -55,7 +55,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   const latestUpdateValueFromInput = useLatest(updateValueOnPopupCloseAction);
 
-  // эффект, который открывает и закрывает поп-ап
+  // effect that opens and closes the pop-up
   React.useEffect(() => {
     const element = ref.current;
 
