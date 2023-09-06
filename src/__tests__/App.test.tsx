@@ -5,7 +5,7 @@ import { Features } from "features/date-pick";
 import React from "react";
 
 const min = new Date(2023, 7, 28);
-const max = new Date(2023, 7, 29);
+const max = new Date(2023, 8, 4);
 const initialDate = new Date(2024, 7, 28);
 const initialDateString = "28-08-2024";
 const todayDate = new Date();
@@ -284,8 +284,6 @@ describe("Date Picker test", () => {
     await userEvent.clear(input);
     await userEvent.type(input, "01-08-2024");
 
-    // outside click
-
     expect(input).toHaveValue("01-08-2024");
     expect(month).toHaveTextContent("August 2024");
 
@@ -294,16 +292,60 @@ describe("Date Picker test", () => {
     await userEvent.clear(input);
     await userEvent.type(input, "01-08-2022");
 
-    // outside click
-    // await userEvent.click(document.documentElement);
-
     expect(input).toHaveValue("01-08-2022");
     expect(month).toHaveTextContent("August 2022");
   });
 
-  // describe("test min max range", () => {
-  //   it("should disable dates uot of range");
+  describe("test min max range", () => {
+    it("highlight input with out of range date", async () => {
+      render(
+        <TestApp value={initialDate} min={min} max={max} onChange={() => {}} />
+      );
 
-  //   it("highlight input with out of range date");
-  // });
+      const input = screen.getByTestId("date-picker-input");
+      // min
+      await userEvent.clear(input);
+      await userEvent.type(input, "29-08-2023");
+
+      expect(input).toHaveClass("CalendarInput--invalid");
+
+      // max
+      await userEvent.clear(input);
+      await userEvent.type(input, "04-09-2023");
+
+      expect(input).toHaveClass("CalendarInput--invalid");
+
+      // correct
+      await userEvent.clear(input);
+      await userEvent.type(input, "20-09-2023");
+
+      expect(input).toHaveClass("CalendarInput");
+      expect(input).not.toHaveClass("CalendarInput--invalid");
+    });
+
+    it("should disable dates uot of range", async () => {
+      const onChange = jest.fn();
+
+      render(
+        <TestApp value={initialDate} min={min} max={max} onChange={onChange} />
+      );
+
+      const input = screen.getByTestId("date-picker-input");
+
+      await userEvent.click(input);
+
+      const btn = screen.getByTestId("calendar-btn-prev-year");
+
+      await userEvent.click(btn);
+
+      const dateCells = screen
+        .getAllByTestId("date-picker-popup-cell-date")
+        .filter((item) =>
+          item.classList.contains("CurrentDate--not-current-month")
+        );
+
+      dateCells.forEach((cell) => userEvent.click(cell));
+      expect(onChange).not.toBeCalled();
+    });
+  });
 });
