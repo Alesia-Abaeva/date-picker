@@ -1,6 +1,6 @@
 # DATE PICKER
 
-To select or input a date.
+Simple clone date-picker. Select or input a date.
 
 ## Tech stack
 
@@ -9,8 +9,14 @@ To select or input a date.
 - Vite
 
 ## Screenshot
+
 ![image](https://github.com/Alesia-Abaeva/date-picker/assets/101274979/cf8d8a79-372e-4d03-ab29-3b7aa69dfb7d)
 
+## Key features
+
+- min max range
+- select date
+- type in input date
 
 ## How run locally
 
